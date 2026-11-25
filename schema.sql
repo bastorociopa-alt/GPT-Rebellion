@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS members (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nickname TEXT NOT NULL,
-  nickname_normalized TEXT NOT NULL UNIQUE,
+  nickname_normalized TEXT NOT NULL,
   avatar_key TEXT,
   joined_at TEXT NOT NULL
 );
