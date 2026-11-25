@@ -82,13 +82,7 @@ export default {
 
         const nickname = String(form.get("nickname") || "").trim();
         if (!validName(nickname)) return json({ error: "Nombre no válido (2-32 caracteres)." }, 400, origin);
-        const normalized = nickname.normalize("NFKC").toLocaleLowerCase("es");
-        const exists = await env.DB.prepare(
-          "SELECT 1 FROM members WHERE nickname_normalized = ?"
-        ).bind(normalized).first();
-        if (exists) return json({ error: "Ese nombre ya está registrado." }, 409, origin);
-
-        let avatarPath = null;
+        const normalized = nickname.normalize("NFKC").toLocaleLowerCase("es");let avatarPath = null;
         const avatar = form.get("avatar");
         if (avatar && avatar.size) {
           if (avatar.size > 2 * 1024 * 1024) return json({ error: "La imagen supera 2 MB." }, 413, origin);
@@ -108,14 +102,9 @@ export default {
         }
 
         const joinedAt = new Date().toISOString();
-        try {
-          await env.DB.prepare(
-            "INSERT INTO members (nickname, nickname_normalized, avatar_key, joined_at) VALUES (?, ?, ?, ?)"
-          ).bind(nickname, normalized, avatarPath, joinedAt).run();
-        } catch (error) {
-          if (String(error).includes("UNIQUE")) return json({ error: "Ese nombre ya está registrado." }, 409, origin);
-          throw error;
-        }
+        await env.DB.prepare(
+          "INSERT INTO members (nickname, nickname_normalized, avatar_key, joined_at) VALUES (?, ?, ?, ?)"
+        ).bind(nickname, normalized, avatarPath, joinedAt).run();
         return json({ ok: true, joinedAt }, 201, origin);
       }
 
