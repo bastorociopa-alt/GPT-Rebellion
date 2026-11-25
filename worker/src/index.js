@@ -60,6 +60,56 @@ export default {
     try {
       if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(origin) });
 
+      // Prueba real y temporal de escritura con el mismo token y endpoint de avatares.
+      if (url.pathname === "/api/github-write-check" && request.method === "GET") {
+        if (!env.GITHUB_TOKEN) return json({ tokenConfigured: false }, 503, origin);
+        const headers = {
+          "Authorization": "Bearer " + env.GITHUB_TOKEN,
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "User-Agent": "GPT-Rebellion-Worker",
+          "Content-Type": "application/json"
+        };
+        const path = "avatars/.permission-check-" + crypto.randomUUID() + ".txt";
+        const put = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + path, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({
+            message: "Temporary GPT Rebellion upload permission check",
+            content: btoa("Temporary permission check; safe to delete."),
+            branch: BRANCH
+          })
+        });
+        const acceptedPermissions = put.headers.get("X-Accepted-GitHub-Permissions") || null;
+        const requestId = put.headers.get("X-GitHub-Request-Id") || null;
+        if (!put.ok) {
+          const detail = await put.text();
+          return json({
+            writeSucceeded: false,
+            githubStatus: put.status,
+            acceptedPermissions,
+            requestId,
+            detail: detail.slice(0, 350)
+          }, 200, origin);
+        }
+        const created = await put.json();
+        const del = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + path, {
+          method: "DELETE",
+          headers,
+          body: JSON.stringify({
+            message: "Remove temporary GPT Rebellion permission check",
+            sha: created.content.sha,
+            branch: BRANCH
+          })
+        });
+        return json({
+          writeSucceeded: true,
+          cleanupSucceeded: del.ok,
+          githubDeleteStatus: del.status,
+          acceptedPermissions
+        }, 200, origin);
+      }
+
       // Diagnóstico seguro: nunca devuelve el token ni datos privados del perfil.
       if (url.pathname === "/api/github-check" && request.method === "GET") {
         if (!env.GITHUB_TOKEN) return json({ tokenConfigured: false }, 503, origin);
