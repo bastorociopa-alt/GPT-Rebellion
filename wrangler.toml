@@ -1,0 +1,16 @@
+name = "gpt-rebellion-api"
+main = "worker/src/index.js"
+compatibility_date = "2026-11-25"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gpt-rebellion"
+database_id = "REEMPLAZAR_CON_DATABASE_ID"
+migrations_dir = "worker/migrations"
+
+[[r2_buckets]]
+binding = "AVATARS"
+bucket_name = "gpt-rebellion-avatars"
+
+[vars]
+PUBLIC_AVATAR_BASE = "https://TU-DOMINIO-PUBLICO-DE-AVATARES"
