@@ -30,26 +30,62 @@ function toBase64(bytes) {
   }
   return btoa(binary);
 }
-async function uploadToGitHub(env, path, bytes, message) {
-  const response = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + path, {
-    method: "PUT",
+async function githubRequest(env, endpoint, options = {}) {
+  const response = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + endpoint, {
+    ...options,
     headers: {
       "Authorization": "Bearer " + env.GITHUB_TOKEN,
       "Accept": "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       "Content-Type": "application/json",
-      "User-Agent": "GPT-Rebellion-Worker"
-    },
-    body: JSON.stringify({ message, content: toBase64(bytes), branch: BRANCH })
+      "User-Agent": "GPT-Rebellion-Worker",
+      ...(options.headers || {})
+    }
   });
+  const body = await response.text();
+  let data;
+  try { data = body ? JSON.parse(body) : {}; } catch { data = { message: body.slice(0, 400) }; }
   if (!response.ok) {
-    const detail = await response.text();
-    const accepted = response.headers.get("X-Accepted-GitHub-Permissions") || "no indicado";
-    const requestId = response.headers.get("X-GitHub-Request-Id") || "no disponible";
-    throw new Error("GitHub upload failed (" + response.status + "): " + detail.slice(0, 220) +
-      " | Permisos requeridos: " + accepted + " | Request ID: " + requestId);
+    throw new Error("GitHub Git Database API (" + response.status + " " + endpoint + "): " +
+      JSON.stringify(data).slice(0, 500));
   }
-  return response.json();
+  return data;
+}
+
+// Sube usando Git Database API (blob -> tree -> commit -> ref), no Contents PUT.
+async function uploadToGitHub(env, path, bytes, message) {
+  const ref = await githubRequest(env, "/git/ref/heads/" + BRANCH);
+  const parentSha = ref.object.sha;
+  const parentCommit = await githubRequest(env, "/git/commits/" + parentSha);
+
+  const blob = await githubRequest(env, "/git/blobs", {
+    method: "POST",
+    body: JSON.stringify({ content: toBase64(bytes), encoding: "base64" })
+  });
+
+  const tree = await githubRequest(env, "/git/trees", {
+    method: "POST",
+    body: JSON.stringify({
+      base_tree: parentCommit.tree.sha,
+      tree: [{ path, mode: "100644", type: "blob", sha: blob.sha }]
+    })
+  });
+
+  const commit = await githubRequest(env, "/git/commits", {
+    method: "POST",
+    body: JSON.stringify({
+      message,
+      tree: tree.sha,
+      parents: [parentSha]
+    })
+  });
+
+  await githubRequest(env, "/git/refs/heads/" + BRANCH, {
+    method: "PATCH",
+    body: JSON.stringify({ sha: commit.sha, force: false })
+  });
+
+  return { commit: { sha: commit.sha }, content: { path, sha: blob.sha } };
 }
 
 export default {
