@@ -99,8 +99,11 @@ export default {
           try {
             await uploadToGitHub(env, avatarPath, bytes, "Add GPT Rebellion member avatar");
           } catch (error) {
-            console.error(error);
-            return json({ error: "GitHub no pudo guardar la imagen. Comprueba el token y los permisos del repositorio." }, 502, origin);
+            console.error("GPT Rebellion GitHub upload error:", error);
+            return json({
+              error: "GitHub no pudo guardar la imagen.",
+              detail: String(error && error.message ? error.message : error).slice(0, 300)
+            }, 502, origin);
           }
         }
 
