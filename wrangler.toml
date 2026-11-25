@@ -5,7 +5,7 @@ compatibility_date = "2026-11-25"
 [[d1_databases]]
 binding = "DB"
 database_name = "gpt-rebellion"
-database_id = "REEMPLAZAR_CON_DATABASE_ID"
+database_id = "d5f2a5f0-e411-4608-bec5-94e8f580bc73"
 
 [[r2_buckets]]
 binding = "AVATARS"
