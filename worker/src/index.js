@@ -44,7 +44,10 @@ async function uploadToGitHub(env, path, bytes, message) {
   });
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error("GitHub upload failed (" + response.status + "): " + detail.slice(0, 300));
+    const accepted = response.headers.get("X-Accepted-GitHub-Permissions") || "no indicado";
+    const requestId = response.headers.get("X-GitHub-Request-Id") || "no disponible";
+    throw new Error("GitHub upload failed (" + response.status + "): " + detail.slice(0, 220) +
+      " | Permisos requeridos: " + accepted + " | Request ID: " + requestId);
   }
   return response.json();
 }
@@ -56,6 +59,33 @@ export default {
 
     try {
       if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(origin) });
+
+      // Diagnóstico seguro: nunca devuelve el token ni datos privados del perfil.
+      if (url.pathname === "/api/github-check" && request.method === "GET") {
+        if (!env.GITHUB_TOKEN) return json({ tokenConfigured: false }, 503, origin);
+        const headers = {
+          "Authorization": "Bearer " + env.GITHUB_TOKEN,
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "User-Agent": "GPT-Rebellion-Worker"
+        };
+        const [userResponse, repoResponse] = await Promise.all([
+          fetch("https://api.github.com/user", { headers }),
+          fetch("https://api.github.com/repos/" + OWNER + "/" + REPO, { headers })
+        ]);
+        let repo = {};
+        if (repoResponse.ok) repo = await repoResponse.json();
+        return json({
+          tokenConfigured: true,
+          tokenAccepted: userResponse.ok,
+          repositoryAccessible: repoResponse.ok,
+          canPush: repoResponse.ok ? Boolean(repo.permissions && repo.permissions.push) : false,
+          repositoryDefaultBranch: repoResponse.ok ? repo.default_branch : null,
+          githubUserStatus: userResponse.status,
+          githubRepositoryStatus: repoResponse.status
+        }, 200, origin);
+      }
+
       if (!env.DB) return json({ error: "Falta conectar la base de datos D1." }, 503, origin);
 
       if (url.pathname === "/api/members" && request.method === "GET") {
