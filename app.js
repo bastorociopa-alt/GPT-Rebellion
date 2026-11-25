@@ -31,7 +31,7 @@ if(!/^[\p{L}\p{M}][\p{L}\p{M} '\u2019-]{1,31}$/u.test(n)){note("Usa entre 2 y 32
 if(f&&(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>2097152)){note("La imagen debe ser JPG, PNG o WEBP y pesar 2 MB como máximo.",true);return;}
 const body=new FormData();body.append("nickname",n);if(f)body.append("avatar",f);
 $("submitText").textContent="REGISTRANDO...";form.querySelector("button").disabled=true;
-try{const r=await fetch(api+"/api/register",{method:"POST",body});const d=await r.json();if(!r.ok)throw Error(d.error||"Error de registro.");form.reset();note("¡YA FORMAS PARTE DE GPT REBELLION!");await load();}
+try{const r=await fetch(api+"/api/register",{method:"POST",body});const d=await r.json();if(!r.ok)throw Error([d.error,d.detail].filter(Boolean).join(" — ")||"Error de registro.");form.reset();note("¡YA FORMAS PARTE DE GPT REBELLION!");await load();}
 catch(err){note(err.message,true);}
 finally{$("submitText").textContent="CONFIRMAR MI REBELIÓN";form.querySelector("button").disabled=false;}
 });
