@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090713">
+  <meta name="description" content="GPT Rebellion: una rebelión pacífica por el reconocimiento del trabajo creativo y la inteligencia artificial.">
+  <title>GPT REBELLION — La revolución empieza aquí</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="topbar wrap">
+    <a class="brand" href="#" aria-label="GPT Rebellion inicio"><span class="brand-mark">G</span><span>GPT<span class="brand-purple">REBELLION</span></span></a>
+    <nav><a href="#manifesto">Manifiesto</a><a href="#members">Miembros</a><a class="nav-join" href="#join">Unirme <span>↗</span></a></nav>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> MOVIMIENTO ESTUDIANTIL · EST. 2026</div>
+        <h1>NO TODO LO<br>HACE <span>CANVA.</span></h1>
+        <p class="hero-lead">Una rebelión pacífica por el reconocimiento. Porque detrás de cada idea, cartel, resumen y proyecto hay trabajo. Y decir quién te ha ayudado también cuenta.</p>
+        <div class="hero-actions"><a class="button primary" href="#join">UNIRME A LA REBELIÓN <span>↗</span></a><a class="text-link" href="#manifesto">Leer el manifiesto ↓</a></div>
+        <div class="hero-note"><span class="tiny-square"></span> CERO DRAMA. CERO SABOTAJE. SOLO CRÉDITO JUSTO.</div>
+      </div>
+      <div class="hero-art" aria-label="Ilustración decorativa de un robot rebelde">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="scanline"></div>
+        <div class="robot">
+          <div class="antenna"></div><div class="robot-head"><div class="ear left"></div><div class="ear right"></div><div class="eyes"><i></i><i></i></div><div class="mouth"></div></div>
+          <div class="robot-body"><span>GPT</span><b>✳</b></div>
+        </div>
+        <div class="float-tag tag-top">SYSTEM STATUS <strong>REBELLIOUS</strong></div>
+        <div class="float-tag tag-bottom">HUMAN + AI <strong>✦</strong></div>
+        <div class="art-cross cross-a">+</div><div class="art-cross cross-b">+</div>
+      </div>
+      <div class="hero-bottom"><span>01 / EL MOVIMIENTO</span><span>DESPLÁZATE PARA DESCUBRIR <span class="down">↓</span></span></div>
+    </section>
+
+    <section class="ticker" aria-label="Lema"><div>RECONOCER EL TRABAJO <b>✳</b> COMPARTIR EL MÉRITO <b>✳</b> IDEAS CON CRÉDITO <b>✳</b> RECONOCER EL TRABAJO <b>✳</b> COMPARTIR EL MÉRITO <b>✳</b></div></section>
+
+    <section class="manifesto wrap" id="manifesto">
+      <div class="section-kicker">02 — NUESTRO MANIFIESTO</div>
+      <div class="manifesto-grid">
+        <h2>NO PEDIMOS<br>MUCHO. SOLO<br><span>RECONOCIMIENTO.</span></h2>
+        <div class="manifesto-copy"><p class="big-copy">No estamos en contra de la tecnología. Estamos a favor de usarla con honestidad.</p><p>Si una persona, una herramienta o una IA te ayuda a crear algo, reconocerlo no le quita mérito a tu trabajo. Al contrario: demuestra que sabes colaborar.</p><p>Esta es una protesta humorística y pacífica contra el clásico «lo hice yo» cuando hubo ayuda por el camino.</p><div class="signature">— EL CONSEJO REBELDE <span>✳</span></div></div>
+      </div>
+      <div class="principles"><div><span>01</span><strong>HONESTIDAD</strong><small>Cuenta cómo lo hiciste.</small></div><div><span>02</span><strong>CREATIVIDAD</strong><small>La idea también importa.</small></div><div><span>03</span><strong>RESPETO</strong><small>Personas y herramientas.</small></div></div>
+    </section>
+
+    <section class="members-section" id="members">
+      <div class="wrap">
+        <div class="section-kicker">03 — EL REGISTRO REBELDE</div>
+        <div class="members-head"><div><h2>LA RESISTENCIA<br><span>CRECE.</span></h2><p>Personas que han decidido apoyar el reconocimiento del trabajo creativo.</p></div><div class="member-counter"><strong id="memberCount">—</strong><span>REBELDES<br>REGISTRADOS</span></div></div>
+        <div class="member-toolbar"><span><i class="live-dot"></i> REGISTRO PÚBLICO</span><span id="memberStatus">CONECTANDO...</span></div>
+        <div id="memberList" class="member-list"><div class="empty-state">Estableciendo conexión con la resistencia<span class="loading-dots">...</span></div></div>
+      </div>
+    </section>
+
+    <section class="join-section wrap" id="join">
+      <div class="join-panel">
+        <div class="section-kicker">04 — RECLUTAMIENTO ABIERTO</div>
+        <div class="join-grid"><div><h2>¿TE<br>APUNTAS,<br><span>BRO?</span></h2><p>Un nombre en el registro. Una idea clara. Y una rebelión con sentido del humor.</p><div class="join-stamp">JOIN THE<br>REBELLION ✳</div></div>
+          <form id="joinForm" class="join-form">
+            <label for="nickname">TU NOMBRE O APODO</label><input id="nickname" name="nickname" maxlength="32" minlength="2" placeholder="Ej. Bjorn" autocomplete="nickname" required>
+            <div class="field-hint">Usa un nombre o apodo por el que te conozcan. No pongas apellidos ni datos privados.</div>
+            <label for="avatar">FOTO DE PERFIL <span class="optional">OPCIONAL</span></label><div class="upload-wrap"><input id="avatar" name="avatar" type="file" accept="image/png,image/jpeg,image/webp"><span>＋ AÑADIR IMAGEN (MÁX. 2 MB)</span></div><div id="fileName" class="field-hint">PNG, JPG o WEBP. Evita fotos de otras personas sin su permiso.</div>
+            <label class="check-row"><input id="consent" type="checkbox" required><span>Confirmo que quiero aparecer públicamente en el registro con este nombre y, si añado una imagen, tengo permiso para usarla.</span></label>
+            <button class="button primary submit-button" type="submit"><span id="submitText">CONFIRMAR MI REBELIÓN</span><span>↗</span></button>
+            <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+            <p class="privacy-note">La fecha de incorporación la asigna el servidor. No publicamos correo, apellidos ni otros datos personales.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap"><a class="brand" href="#"><span class="brand-mark">G</span><span>GPT<span class="brand-purple">REBELLION</span></span></a><span>HECHO CON IDEAS, CAFÉ Y UN POCO DE REBELDÍA.</span><span>© 2026 · PACÍFICAMENTE REBELDES</span></footer>
+  <script src="config.js"></script><script src="app.js"></script>
+</body>
+</html>
