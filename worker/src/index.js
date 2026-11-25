@@ -46,8 +46,11 @@ async function githubRequest(env, endpoint, options = {}) {
   let data;
   try { data = body ? JSON.parse(body) : {}; } catch { data = { message: body.slice(0, 400) }; }
   if (!response.ok) {
+    const accepted = response.headers.get("X-Accepted-GitHub-Permissions") || "no indicado";
+    const requestId = response.headers.get("X-GitHub-Request-Id") || "no disponible";
     throw new Error("GitHub Git Database API (" + response.status + " " + endpoint + "): " +
-      JSON.stringify(data).slice(0, 500));
+      JSON.stringify(data).slice(0, 350) + " | Permisos requeridos: " + accepted +
+      " | Request ID: " + requestId);
   }
   return data;
 }
